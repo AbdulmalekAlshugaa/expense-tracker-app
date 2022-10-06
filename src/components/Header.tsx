@@ -1,60 +1,82 @@
-import { View, Text ,ImageSourcePropType  ,StyleProp,  TextStyle,
-    ViewStyle,} from 'react-native'
-import React from 'react'
+import {
+  View,
+  Text,
+  ImageSourcePropType,
+  StyleProp,
+  TextStyle,
+  ViewStyle,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from "react-native";
+import React from "react";
+import { COLORS, icons, SIZES } from "../../assets/constants";
 
+interface Style {
+  container: ViewStyle;
+  imageStyle: ViewStyle;
+}
 
+const styles = StyleSheet.create<Style>({
+  container: {
+    flexDirection: "row",
+    height: 80,
+    justifyContent: "space-between",
+    alignItems: "flex-end",
+    paddingHorizontal: SIZES.padding,
+    backgroundColor: COLORS.white,
+  },
+  imageStyle: {
+    width: 30,
+    height: 30,
+    tintColor: COLORS.primary,
+  },
+});
 
 interface HeaderProps {
-    leftIcon?: ImageSourcePropType
-    rightIcon?: ImageSourcePropType
-    leftText?: string
-    rightText?: string
-    title?: string
-    titleStyles?: StyleProp<TextStyle>
-    subtitle?: string
-    leftAction?: () => void
-    rightAction?: () => void
-    rightActionEnabled?: boolean
-    
-  }
+  leftIcon?: ImageSourcePropType;
+  rightIcon?: ImageSourcePropType;
 
-  const Header: React.FC<HeaderProps> = ({
-    leftIcon,
-    rightIcon,
-    leftText,
-    rightText,
-    title,
-    titleStyles,
-    subtitle,
-    leftAction,
-    rightAction,
-    rightActionEnabled = true,
-   
-  }) => {
-    const HITSLOPE = {
-      top: 40,
-      left: 40,
-      bottom: 40,
-      right: 40,
-    }
-  
-    return (
-      <View style={{
-        flexDirection: 'row',
-      }}>
-     
-      </View>
-    )
-  }
+  leftAction?: () => void;
+  rightAction?: () => void;
+  rightActionEnabled?: boolean;
+}
 
-  const styles = StyleSheet.create({
-    container: {
-      height: 50,
-      justifyContent: 'center',
-    },
-  
-   
-  })
+const Header: React.FC<HeaderProps> = ({
+  leftAction,
+  rightAction,
+  leftIcon,
+  rightIcon,
+  rightActionEnabled = true,
+}) => {
+  const HITSLOPE = {
+    top: 40,
+    left: 40,
+    bottom: 40,
+    right: 40,
+  };
 
-export default Header
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={{ justifyContent: "center", width: 50 }}
+        onPress={leftAction}
+      >
+        <Image source={leftIcon} style={styles.imageStyle} />
+      </TouchableOpacity>
 
+      <TouchableOpacity
+        style={{
+          justifyContent: "center",
+          alignItems: "flex-end",
+          width: 50,
+        }}
+        onPress={rightAction}
+      >
+        <Image source={rightIcon} style={styles.imageStyle} />
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+export default Header;

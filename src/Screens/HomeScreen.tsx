@@ -12,10 +12,11 @@ import {
   ScrollView,
 } from "react-native";
 
-import React, { useRef,useEffect,useCallback } from "react";
+import React, { useRef, useEffect, useCallback } from "react";
 import { COLORS, FONTS, icons, SIZES } from "../../assets/constants";
 import * as Svg from "react-native-svg";
 import { VictoryPie } from "victory-native";
+import Header from "../components/Header";
 export interface HomeProps {
   step: number;
   setIsDisabled: (disabled: boolean) => void;
@@ -32,7 +33,7 @@ export interface HomeProps {
 const HomeScreen: React.FC<HomeProps> = (props) => {
   const confirmStatus = "C";
   const pendingStatus = "P";
-  
+
   let categoriesData = [
     {
       id: 1,
@@ -236,52 +237,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     new Animated.Value(115)
   ).current;
 
-  function renderNavBar() {
-    return (
-      <View
-        style={{
-          flexDirection: "row",
-          height: 80,
-          justifyContent: "space-between",
-          alignItems: "flex-end",
-          paddingHorizontal: SIZES.padding,
-          backgroundColor: COLORS.white,
-        }}
-      >
-        <TouchableOpacity
-          style={{ justifyContent: "center", width: 50 }}
-          onPress={() => console.log("Go Back")}
-        >
-          <Image
-            source={icons.back_arrow}
-            style={{
-              width: 30,
-              height: 30,
-              tintColor: COLORS.primary,
-            }}
-          />
-        </TouchableOpacity>
 
-        <TouchableOpacity
-          style={{
-            justifyContent: "center",
-            alignItems: "flex-end",
-            width: 50,
-          }}
-          onPress={() => console.log("More")}
-        >
-          <Image
-            source={icons.more}
-            style={{
-              width: 30,
-              height: 30,
-              tintColor: COLORS.primary,
-            }}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  }
   function renderHeader() {
     return (
       <View
@@ -900,7 +856,12 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   }
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-      {renderNavBar()}
+      <Header
+        leftAction={() => console.log("Left Action")}
+        rightAction={() => console.log("Right Action")}
+        leftIcon={icons.back_arrow}
+        rightIcon={icons.menu}
+      />
 
       {renderHeader()}
 
