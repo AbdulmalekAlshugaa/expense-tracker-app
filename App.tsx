@@ -3,9 +3,10 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useRef,useEffect,useCallback } from "react";
 import { store } from "./src/store";
 import { Provider } from "react-redux";
-import Home from "./src/Screen/Home";
+
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import HomeScreen from "./src/Screens/HomeScreen";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -14,25 +15,24 @@ export default function App() {
     'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
     'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
   });
-  useEffect(() => {
-    async function prepare() {
-      await SplashScreen.preventAutoHideAsync();
-    }
-    prepare();
-  }, []);
-  const onLayoutRootView = useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
+  // useEffect(() => {
+  //   async function prepare() {
+  //     await SplashScreen.preventAutoHideAsync();
+  //   }
+  //   prepare();
+  // }, []);
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (fontsLoaded) {
+  //     await SplashScreen.hideAsync();
+  //   }
+  // }, [fontsLoaded]);
+  
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  
   return (
     <Provider store={store}>
-      <Home />
-
+  
+  <HomeScreen/>
     
     </Provider>
   );

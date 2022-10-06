@@ -29,7 +29,7 @@ export interface HomeProps {
   onNotNumber: () => void;
 }
 
-const Home: React.FC<HomeProps> = (props) => {
+const HomeScreen: React.FC<HomeProps> = (props) => {
   const confirmStatus = "C";
   const pendingStatus = "P";
   
@@ -927,6 +927,6 @@ const Home: React.FC<HomeProps> = (props) => {
 // create styles
 
 // export default Home;
-export default Home;
+export default HomeScreen;
 
 //
