@@ -78,7 +78,6 @@ const AppTextInput: React.FC<CustomTextInput> = ({
           style={{
             marginHorizontal: 10,
             marginBottom: -20,
-
             color: COLORS.red,
             ...FONTS.body3,
           }}

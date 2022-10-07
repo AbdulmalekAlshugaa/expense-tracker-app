@@ -21,6 +21,7 @@ import Header from "../components/Header";
 import AppForm from "../components/forms/AppForm";
 
 import AppTextInput from "../components/AppTextInput";
+import CustomButton from "../components/CustomButton";
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
   price: Yup.number().required().min(1).max(10000).label("Price"),
@@ -84,10 +85,10 @@ const ListingAddingScreen: React.FC<HomeProps> = (props) => {
             
   
           
-        
+  
 
        />
-
+<CustomButton/>
       </AppForm>
        
       
