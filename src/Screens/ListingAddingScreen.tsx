@@ -56,20 +56,37 @@ const ListingAddingScreen: React.FC<HomeProps> = (props) => {
       >
 
        <AppTextInput
-
-          name="title"
+          label="title"
           placeholder="Title"
           icon="format-title"
-          width="100%"
-          keyboardType="default"
           autoCapitalize="none"
           autoCorrect={false}
+          keyboardType="default"
           textContentType="none"
           returnKeyType="next"
           returnKeyLabel="next"
+            
+  
+          
+        
 
        />
+         <AppTextInput
+          label="Description"
+          placeholder="Description"
+          icon="format-title"
+          autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="default"
+          textContentType="none"
+          returnKeyType="next"
+          returnKeyLabel="next"
+            
+  
+          
         
+
+       />
 
       </AppForm>
        
