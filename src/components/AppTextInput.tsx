@@ -43,6 +43,9 @@ interface CustomTextInput {
   error?: string;
   placeholder?: string;
   errorText?: string;
+  onchangeText?: (text: string) => void;
+  onBlur?: () => void;
+  value?: any;
 }
 
 const AppTextInput: React.FC<CustomTextInput> = ({
@@ -54,6 +57,10 @@ const AppTextInput: React.FC<CustomTextInput> = ({
   onPressAction,
   error,
   errorText,
+    onchangeText,
+    onBlur,
+    value,
+
 }) => {
   return (
     <View style={styles.container}>
@@ -64,6 +71,9 @@ const AppTextInput: React.FC<CustomTextInput> = ({
         placeholderTextColor={COLORS.gray}
         mode="outlined"
         error={error}
+        onChangeText={onchangeText}
+        onBlur={onBlur}
+        value={value}
         outlineColor={COLORS.gray}
         activeOutlineColor={COLORS.moneyLightGreen}
         allowFontScaling={true}
