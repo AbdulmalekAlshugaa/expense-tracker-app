@@ -1,35 +1,80 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice,createAsyncThunk } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
+import expensesApi from '../../api/expensesApi'
+
+
+
 
 export interface CounterState {
-  value: number
+  value: number,
+  status: 'idle' | 'loading' | 'failed' | 'success' | 'pending' | 'fulfilled' | 'rejected' | 'aborted',
+  error: string | null,
+  postsList: any
 }
 
 const initialState: CounterState = {
   value: 0,
+  postsList: [],
+  status: "idle",
+  error: '',
 }
 
+export const fetchPosts = createAsyncThunk(
+  'posts/fetchPosts',
+  async () => {
+    const response = await expensesApi.getExpenses()
+    if (response.ok) {
+      return response.data
+    }
+    return Promise.reject(response)
+  }
+)
+
+
+
+
+
+
 export const expensesSlice = createSlice({
-  name: 'counter',
+  name: 'expenses',
   initialState,
   reducers: {
-    increment: (state) => {
+    successFetchPostData: (state,actions) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      state.value += 1
+      state.status = "loading";
+      state.postsList = state.postsList.concat(actions.payload);
+      state.status = "success";
     },
-    decrement: (state) => {
-      state.value -= 1
+    cleanPostData: (state, actions) => {
+      state.postsList = [];
     },
-    incrementByAmount: (state, action: PayloadAction<number>) => {
-      state.value += action.payload
+    failedFetchPostData: (state, actions) => {
+      state.status = "loading";
+      state.error =  state.postsList.concat(actions.payload);
+      state.status = "failed";
     },
   },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPosts.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = "success";
+        state.postsList = state.postsList.concat(action.payload);
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+  }
+
 })
 
 // Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = expensesSlice.actions
+export const {   successFetchPostData,  cleanPostData, failedFetchPostData } = expensesSlice.actions
 
 export default expensesSlice.reducer
