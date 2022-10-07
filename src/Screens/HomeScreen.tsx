@@ -11,7 +11,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { useSelector, useDispatch } from "react-redux";
 
-import React, { useRef, useEffect, useCallback } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { COLORS, FONTS, icons, SIZES } from "../../assets/constants";
 import * as Svg from "react-native-svg";
 import { VictoryPie } from "victory-native";
@@ -66,9 +66,9 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     }
   }, [posts, status, dispatch]);
 
-  const [viewMode, setViewMode] = React.useState("chart");
-  const [selectedCategory, setSelectedCategory] = React.useState(null);
-  const [showMoreToggle, setShowMoreToggle] = React.useState(false);
+  const [viewMode, setViewMode] = useState("chart");
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showMoreToggle, setShowMoreToggle] = useState(false);
   const categoryListHeightAnimationValue = useRef(
     new Animated.Value(115)
   ).current;
@@ -324,7 +324,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
         {/* Expense Description */}
         <View style={{ paddingHorizontal: SIZES.padding }}>
           {/* Title and description */}
-          <Text style={{ ...FONTS.h2 }}>{item.title}</Text>
+          <Text style={{ ...FONTS.h3 }}>{item.title}</Text>
           <Text
             style={{ ...FONTS.body3, flexWrap: "wrap", color: COLORS.darkgray }}
           >

@@ -10,9 +10,9 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import HomeScreen from "./src/Screens/HomeScreen";
 import AppNavigator from "./src/navigation/AppNavigator";
-import { COLORS } from "./assets/constants";
+import { COLORS, FONTS } from "./assets/constants";
 import { Provider as PaperProvider } from "react-native-paper";
-
+import FlashMessage from 'react-native-flash-message';
 export type RootParamList = {
   HomeStack: undefined;
 };
@@ -52,6 +52,17 @@ export default function App() {
             />
           </Stack.Navigator>
         </NavigationContainer>
+        <FlashMessage
+                position="top"
+                floating
+                statusBarHeight={30}
+                titleStyle={{
+                  ...FONTS.h4,
+                }}
+                textStyle={{
+                  ...FONTS.body4,
+                }}
+              />
       </PaperProvider>
     </Provider>
   );

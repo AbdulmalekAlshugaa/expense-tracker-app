@@ -13,7 +13,7 @@ const headers = {
   const apiClient = create({
     baseURL: setting.apiUrl,
     headers: headers,
-    timeout: 60000,
+    timeout: 30000,
   });
 
 export default apiClient;
