@@ -4,13 +4,11 @@ import {
   Animated,
   TouchableOpacity,
   Image,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-  ImageStyle,
   FlatList,
   ScrollView,
 } from "react-native";
+import { StatusBar } from "expo-status-bar";
+import { useSelector, useDispatch } from "react-redux";
 
 import React, { useRef, useEffect, useCallback } from "react";
 import { COLORS, FONTS, icons, SIZES } from "../../assets/constants";
@@ -19,6 +17,7 @@ import { VictoryPie } from "victory-native";
 import Header from "../components/Header";
 import CategoryItem from "../components/CategoryItem";
 import CustomTitle from "../components/CustomTitle";
+import { fetchPosts } from "../feature/expenses/expensesSlice";
 export interface HomeProps {
   step: number;
   setIsDisabled: (disabled: boolean) => void;
@@ -33,8 +32,30 @@ export interface HomeProps {
 }
 
 const HomeScreen: React.FC<HomeProps> = (props) => {
+
   const confirmStatus = "C";
   const pendingStatus = "P";
+
+  const dispatch = useDispatch();
+
+  const status = useSelector((state: any) => state.expenses.status);
+  const posts = useSelector((state: any) => state.expenses.postsList);
+
+  console.log("posts", posts);
+
+  const fetchListings = useCallback(async () => {
+
+  }, []);
+
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchPosts());
+     
+    }
+    
+  }, []);
+
 
   let categoriesData = [
     {

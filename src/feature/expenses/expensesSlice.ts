@@ -30,11 +30,6 @@ export const fetchPosts = createAsyncThunk(
   }
 )
 
-
-
-
-
-
 export const expensesSlice = createSlice({
   name: 'expenses',
   initialState,
