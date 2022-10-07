@@ -41,7 +41,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
       id: 1,
       name: "Education",
       icon: icons.education,
-      color: COLORS.yellow,
+      color: COLORS.moneyLightGreen,
       expenses: [
         {
           id: 1,
@@ -146,7 +146,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
       id: 4,
       name: "Beauty & Care",
       icon: icons.healthcare,
-      color: COLORS.peach,
+      color: COLORS.red,
       expenses: [
         {
           id: 11,
@@ -239,56 +239,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     new Animated.Value(115)
   ).current;
 
-  function renderSubHeader(isIconEnable: boolean) {
-    return (
-      <View
-        style={{
-          paddingHorizontal: isIconEnable ? SIZES.padding : 0,
-          backgroundColor: COLORS.white,
-        }}
-      >
-        
-        <View
-          style={{
-            flexDirection: "row",
-            marginTop: SIZES.padding,
-            alignItems: "center",
-          }}
-        >
-          {isIconEnable ? (
-            <View
-              style={{
-                backgroundColor: COLORS.lightGray,
-                height: 50,
-                width: 50,
-                borderRadius: 25,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Image
-                source={icons.calendar}
-                style={{
-                  width: 20,
-                  height: 20,
-                  tintColor: COLORS.lightBlue,
-                }}
-              />
-            </View>
-          ) : null}
-
-          <View style={{ marginLeft: SIZES.padding }}>
-            <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>
-              11 Nov, 2020
-            </Text>
-            <Text style={{ ...FONTS.body3, color: COLORS.darkgray }}>
-              18% more than last month
-            </Text>
-          </View>
-        </View>
-      </View>
-    );
-  }
+ 
   function renderSubHeader2() {
     return (
       <View
