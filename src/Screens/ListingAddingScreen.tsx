@@ -54,12 +54,80 @@ const styles = StyleSheet.create<Style>({
   },
 });
 
+const categories = [
+  {
+    color:COLORS.moneyLightGreen,
+    name: "Education",
+    id: 1,
+  },
+  {
+    color: COLORS.lightBlue,
+   
+    name: "Nutrition",
+    id: 2,
+  },
+  {
+    color: COLORS.darkgreen,
+   
+    name: "Child",
+    id: 3,
+  },
+  {
+    color: COLORS.red,
+  
+    name: "Beauty & Care",
+    id: 4,
+  },
+  {
+    color: COLORS.purple,
 
+    name: "Sports",
+    id: 5,
+  },
+  {
+    color: COLORS.red,
+   
+    name: "Clothing",
+    id: 6,
+  },
+  
+];
 
 const ListingAddingScreen: React.FC<HomeProps> = (props) => {
-  const [expanded, setExpanded] = React.useState(true);
+  const [expanded, setExpanded] = React.useState(false);
+  const [expandedCtr, setExpandedCtr] = React.useState(false);
+  const [category, setCategory] = React.useState(categories);
+  const [selectedCategory, setSelectedCategory] = React.useState('');
+  const [selectedStatus, setSelectedStatus] = React.useState(null);
 
-  const handlePress = () => setExpanded(!expanded);
+  const handlePress = (element:any) => {
+  
+    setSelectedStatus(element);
+    setExpanded(!expanded); 
+  };
+ const handleCtrPress = (element:any) => {
+  setExpandedCtr(!expandedCtr);
+  setSelectedCategory(element);
+ }
+
+ const submit = (values:any) => { 
+  const data = {
+    title: values.title,
+    total: values.price,
+    description: values.description,
+    category: selectedCategory,
+    status: selectedStatus,
+    location: "Yemen Ibb",
+    
+  };
+
+  console.log(data);
+ 
+ 
+  
+  }
+
+
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -78,7 +146,7 @@ const ListingAddingScreen: React.FC<HomeProps> = (props) => {
           status: "",
         }}
     
-        onSubmit={(values) => console.log(values)}
+        onSubmit={(values) => submit(values)}
       >
         {({ handleChange, handleBlur, handleSubmit, values }) => (
           <View
@@ -146,11 +214,32 @@ const ListingAddingScreen: React.FC<HomeProps> = (props) => {
                 onPress={handlePress}
               >
                 <List.Item
-                  onPress={handlePress}
-                  onBlur={handleBlur("status")}
+                  onPress={()=>handlePress("INCOME")}
+                  
                   style={styles.dropDownList}
                   title="Income"
                 />
+                <List.Item
+                 onPress={()=>handlePress("EXPENSES")}
+                 style={styles.dropDownList}
+                  title="Expenses" />
+              </List.Accordion>
+           
+              <List.Accordion
+                style={styles.dropDownList}
+                title="Category"
+                expanded={expandedCtr}
+                onPress={handleCtrPress}
+              >
+                  {category.map(element => {
+                    return (
+                      <List.Item
+                        onPress={() => handleCtrPress(element)}
+                        style={styles.dropDownList}
+                        title={element.name}
+                      />
+                    );
+                  })}
                 <List.Item style={styles.dropDownList} title="Expenses" />
               </List.Accordion>
             </ScrollView>

@@ -33,14 +33,12 @@ export interface HomeProps {
 }
 
 const HomeScreen: React.FC<HomeProps> = (props) => {
-  const confirmStatus = "C";
-  const pendingStatus = "P";
+ 
   const dispatch = useDispatch();
   const status = useSelector((state: any) => state.expenses.status);
   const posts = useSelector((state: any) => state.expenses.postsList);
 
   const [orderStatus, setOrderStatus] = React.useState("INCOME");
-
 
   const itemIconById = (id: number) => {
     switch (id) {
@@ -56,24 +54,17 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
         return icons.sports_icon;
       case 6:
         return icons.cloth_icon;
-      
+
       default:
         return icons.more;
     }
-
-    }
-
+  };
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchPosts());
     }
-    
   }, [posts, status, dispatch]);
-
-  console.log("posts", posts.result);
-
- 
 
   const [viewMode, setViewMode] = React.useState("chart");
   const [selectedCategory, setSelectedCategory] = React.useState(null);
@@ -82,7 +73,6 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     new Animated.Value(115)
   ).current;
 
- 
   function renderSubHeader2() {
     return (
       <View
@@ -100,7 +90,6 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
             Summary (private)
           </Text>
         </View>
-       
       </View>
     );
   }
@@ -243,9 +232,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
         }}
       >
         {/* Title */}
-        <Text style={{ ...FONTS.h3, color: COLORS.primary }}>
-          EXPENSES
-        </Text>
+        <Text style={{ ...FONTS.h3, color: COLORS.primary }}>EXPENSES</Text>
         <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>12 Total</Text>
       </View>
     );
@@ -273,27 +260,30 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
           elevation: 3,
         }}
       >
-         <View
+        <View
           style={{
-            position: 'absolute',
+            position: "absolute",
             top: -2,
             right: -4,
             width: 100,
-            alignItems: 'center',
-            justifyContent: 'center',
+            alignItems: "center",
+            justifyContent: "center",
             borderTopRightRadius: 25,
             borderBottomLeftRadius: 25,
-            backgroundColor: item.status == "INCOME" ? COLORS.primary : COLORS.red,
+            backgroundColor:
+              item.status == "INCOME" ? COLORS.primary : COLORS.red,
             height: 30,
-          }}>
+          }}
+        >
           <Text
             style={{
               ...FONTS.body4,
               color: COLORS.white,
               marginStart: 1,
               marginTop: 1,
-              textAlign: 'left',
-            }}>
+              textAlign: "left",
+            }}
+          >
             {item.status}
           </Text>
         </View>
@@ -418,7 +408,9 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   function processCategoryDataToDisplay() {
     // Filter expenses with "Confirmed" status
     let chartData = posts.result.map((item) => {
-      let confirmExpenses = item.expenses.filter((a) => a.status == orderStatus);
+      let confirmExpenses = item.expenses.filter(
+        (a) => a.status == orderStatus
+      );
       var total = confirmExpenses.reduce((a, b) => a + (b.total || 0), 0);
 
       return {
@@ -659,66 +651,65 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     );
   }
 
-  function renderStatusSelection (){
+  function renderStatusSelection() {
     return (
-      <View style={{
-   
-        backgroundColor: COLORS.lightGray2,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
- 
-        
-       
-       
-      }}>
-  <TouchableOpacity
-    onPress={() => setOrderStatus('EXPENSES')}
-    style={{
-      backgroundColor: COLORS.red,
-      marginStart: 10,
-      marginEnd: 10,
-      borderRadius: 5,
-      width: Dimensions.get('screen').width / 3,
-      height: Dimensions.get('screen').height /25,
+      <View
+        style={{
+          backgroundColor: COLORS.lightGray2,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => setOrderStatus("EXPENSES")}
+          style={{
+            backgroundColor: COLORS.red,
+            marginStart: 10,
+            marginEnd: 10,
+            borderRadius: 5,
+            width: Dimensions.get("screen").width / 3,
+            height: Dimensions.get("screen").height / 25,
 
-      padding: 10,
-      
-    }}>
-    <Text
-      style={{
-        ...FONTS.body5,
-        color: COLORS.white,
-     
-        alignSelf: 'center',
-      }}>
-      Expenses
-    </Text>
-  </TouchableOpacity>
-  <TouchableOpacity
-    onPress={() => setOrderStatus('INCOME')}
-    style={{
-      backgroundColor: COLORS.darkgreen,
-      marginStart: 10,
-      marginEnd: 10,
-      borderRadius: 5,
-      width: Dimensions.get('screen').width / 3,
-      height: Dimensions.get('screen').height /25,
+            padding: 10,
+          }}
+        >
+          <Text
+            style={{
+              ...FONTS.body5,
+              color: COLORS.white,
 
-      padding: 10,
-      
-    }}>
-    <Text
-      style={{
-        ...FONTS.body5,
-        color: COLORS.white,
-     
-        alignSelf: 'center',
-      }}>
-      Income
-    </Text>
-  </TouchableOpacity>
+              alignSelf: "center",
+            }}
+          >
+            Expenses
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setOrderStatus("INCOME")}
+          style={{
+            backgroundColor: COLORS.darkgreen,
+            marginStart: 10,
+            marginEnd: 10,
+            borderRadius: 5,
+            width: Dimensions.get("screen").width / 3,
+            height: Dimensions.get("screen").height / 25,
+
+            padding: 10,
+          }}
+        >
+          <Text
+            style={{
+              ...FONTS.body5,
+              color: COLORS.white,
+
+              alignSelf: "center",
+            }}
+          >
+            Income
+          </Text>
+        </TouchableOpacity>
       </View>
-    )
+    );
   }
 
   return (
@@ -729,30 +720,31 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
         leftIcon={icons.back_arrow}
         rightIcon={icons.menu}
       />
-   
-        {renderSubHeader2()}
-    
-      {renderStatusSelection()}
 
-      {renderCategoryHeaderSection()}
+      {status == "success" ? (
+        <>
+          {renderSubHeader2()}
 
-      <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
-        {viewMode == "list" && (
-          <View>
-            {renderCategoryList()}
-            {renderIncomingExpenses()}
-          </View>
-        )}
-        {viewMode == "chart" && (
-          <View>
-            {renderChart()}
-            {renderExpenseSummary()}
-          </View>
-        )}
-      </ScrollView>
-  
+          {renderStatusSelection()}
 
+          {renderCategoryHeaderSection()}
 
+          <ScrollView contentContainerStyle={{ paddingBottom: 60 }}>
+            {viewMode == "list" && (
+              <View>
+                {renderCategoryList()}
+                {renderIncomingExpenses()}
+              </View>
+            )}
+            {viewMode == "chart" && (
+              <View>
+                {renderChart()}
+                {renderExpenseSummary()}
+              </View>
+            )}
+          </ScrollView>
+        </>
+      ) : null}
     </View>
   );
 };
