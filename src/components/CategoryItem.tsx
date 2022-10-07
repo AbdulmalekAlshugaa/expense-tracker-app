@@ -44,7 +44,6 @@ import {
   
   interface CategoryProps {
     item?: any;
-  
     onPressAction?: () => void;
     
   }
@@ -53,7 +52,29 @@ import {
    onPressAction,
    item,
   }) => {
+
+    
    
+    const itemIconById = (id: number) => {
+      switch (id) {
+        case 1:
+          return icons.education;
+        case 2:
+          return icons.food;
+        case 3:
+          return icons.baby_car;
+        case 4:
+          return icons.healthcare;
+        case 5:
+          return icons.sports_icon;
+        case 6:
+          return icons.cloth_icon;
+        
+        default:
+          return icons.more;
+      }
+
+      }
   
     return (
         <TouchableOpacity
@@ -61,7 +82,7 @@ import {
         style={styles.container}
       >
         <Image
-          source={item.icon}
+          source={itemIconById(item.id)}
           style={{
             width: 20,
             height: 20,

@@ -54,62 +54,7 @@ const styles = StyleSheet.create<Style>({
   },
 });
 
-const categories = [
-  {
-    backgroundColor: "#fc5c65",
-  
-    name: "Education",
-    id: 1,
-  },
-  {
-    backgroundColor: "#fd9644",
-   
-    name: "Cars",
-    id: 2,
-  },
-  {
-    backgroundColor: "#fed330",
-   
-    name: "Cameras",
-    id: 3,
-  },
-  {
-    backgroundColor: "#26de81",
-  
-    name: "Games",
-    id: 4,
-  },
-  {
-    backgroundColor: "#2bcbba",
 
-    name: "Clothing",
-    id: 5,
-  },
-  {
-    backgroundColor: "#45aaf2",
-   
-    name: "Sports",
-    id: 6,
-  },
-  {
-    backgroundColor: "#4b7bec",
-  
-    name: "Movies & Music",
-    id: 7,
-  },
-  {
-    backgroundColor: "#a55eea",
-  
-    name: "Books",
-    id: 8,
-  },
-  {
-    backgroundColor: "#778ca3",
-
-    name: "Other",
-    id: 9,
-  },
-];
 
 const ListingAddingScreen: React.FC<HomeProps> = (props) => {
   const [expanded, setExpanded] = React.useState(true);

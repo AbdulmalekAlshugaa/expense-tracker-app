@@ -39,8 +39,9 @@ export const expensesSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
+      console.log('actions',actions.payload)
       state.status = "loading";
-      state.postsList = state.postsList.concat(actions.payload);
+      state.postsList = actions.payload
       state.status = "success";
     },
     cleanPostData: (state, actions) => {
@@ -48,7 +49,7 @@ export const expensesSlice = createSlice({
     },
     failedFetchPostData: (state, actions) => {
       state.status = "loading";
-      state.error =  state.postsList.concat(actions.payload);
+      state.postsList =  [];
       state.status = "failed";
     },
   },
@@ -59,7 +60,7 @@ export const expensesSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = "success";
-        state.postsList = state.postsList.concat(action.payload);
+        state.postsList = action.payload
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = "failed";

@@ -6,6 +6,7 @@ import {
   Image,
   FlatList,
   ScrollView,
+  Dimensions,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useSelector, useDispatch } from "react-redux";
@@ -32,227 +33,48 @@ export interface HomeProps {
 }
 
 const HomeScreen: React.FC<HomeProps> = (props) => {
-
   const confirmStatus = "C";
   const pendingStatus = "P";
-
   const dispatch = useDispatch();
-
   const status = useSelector((state: any) => state.expenses.status);
   const posts = useSelector((state: any) => state.expenses.postsList);
 
-  console.log("posts", posts);
+  const [orderStatus, setOrderStatus] = React.useState("INCOME");
 
-  const fetchListings = useCallback(async () => {
 
-  }, []);
+  const itemIconById = (id: number) => {
+    switch (id) {
+      case 1:
+        return icons.education;
+      case 2:
+        return icons.food;
+      case 3:
+        return icons.baby_car;
+      case 4:
+        return icons.healthcare;
+      case 5:
+        return icons.sports_icon;
+      case 6:
+        return icons.cloth_icon;
+      
+      default:
+        return icons.more;
+    }
+
+    }
 
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchPosts());
-     
     }
     
-  }, []);
+  }, [posts, status, dispatch]);
 
+  console.log("posts", posts.result);
 
-  let categoriesData = [
-    {
-      id: 1,
-      name: "Education",
-      icon: icons.education,
-      color: COLORS.moneyLightGreen,
-      expenses: [
-        {
-          id: 1,
-          title: "Tuition Fee",
-          description: "Tuition fee",
-          location: "ByProgrammers' tuition center",
-          total: 100.0,
-          status: pendingStatus,
-        },
-        {
-          id: 2,
-          title: "Arduino",
-          description: "Hardward",
-          location: "ByProgrammers' tuition center",
-          total: 30.0,
-          status: pendingStatus,
-        },
-        {
-          id: 3,
-          title: "Javascript Books",
-          description: "Javascript books",
-          location: "ByProgrammers' Book Store",
-          total: 20.0,
-          status: confirmStatus,
-        },
-        {
-          id: 4,
-          title: "PHP Books",
-          description: "PHP books",
-          location: "ByProgrammers' Book Store",
-          total: 20.0,
-          status: confirmStatus,
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Nutrition",
-      icon: icons.food,
-      color: COLORS.lightBlue,
-      expenses: [
-        {
-          id: 5,
-          title: "Vitamins",
-          description: "Vitamin",
-          location: "ByProgrammers' Pharmacy",
-          total: 25.0,
-          status: pendingStatus,
-        },
+ 
 
-        {
-          id: 6,
-          title: "Protein powder",
-          description: "Protein",
-          location: "ByProgrammers' Pharmacy",
-          total: 50.0,
-          status: confirmStatus,
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Child",
-      icon: icons.baby_car,
-      color: COLORS.darkgreen,
-      expenses: [
-        {
-          id: 7,
-          title: "Toys",
-          description: "toys",
-          location: "ByProgrammers' Toy Store",
-          total: 25.0,
-          status: confirmStatus,
-        },
-        {
-          id: 8,
-          title: "Baby Car Seat",
-          description: "Baby Car Seat",
-          location: "ByProgrammers' Baby Care Store",
-          total: 100.0,
-          status: pendingStatus,
-        },
-        {
-          id: 9,
-          title: "Pampers",
-          description: "Pampers",
-          location: "ByProgrammers' Supermarket",
-          total: 100.0,
-          status: pendingStatus,
-        },
-        {
-          id: 10,
-          title: "Baby T-Shirt",
-          description: "T-Shirt",
-          location: "ByProgrammers' Fashion Store",
-          total: 20.0,
-          status: pendingStatus,
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: "Beauty & Care",
-      icon: icons.healthcare,
-      color: COLORS.red,
-      expenses: [
-        {
-          id: 11,
-          title: "Skin Care product",
-          description: "skin care",
-          location: "ByProgrammers' Pharmacy",
-          total: 10.0,
-          status: pendingStatus,
-        },
-        {
-          id: 12,
-          title: "Lotion",
-          description: "Lotion",
-          location: "ByProgrammers' Pharmacy",
-          total: 50.0,
-          status: confirmStatus,
-        },
-        {
-          id: 13,
-          title: "Face Mask",
-          description: "Face Mask",
-          location: "ByProgrammers' Pharmacy",
-          total: 50.0,
-          status: pendingStatus,
-        },
-        {
-          id: 14,
-          title: "Sunscreen cream",
-          description: "Sunscreen cream",
-          location: "ByProgrammers' Pharmacy",
-          total: 50.0,
-          status: pendingStatus,
-        },
-      ],
-    },
-    {
-      id: 5,
-      name: "Sports",
-      icon: icons.sports_icon,
-      color: COLORS.purple,
-      expenses: [
-        {
-          id: 15,
-          title: "Gym Membership",
-          description: "Monthly Fee",
-          location: "ByProgrammers' Gym",
-          total: 45.0,
-          status: pendingStatus,
-        },
-        {
-          id: 16,
-          title: "Gloves",
-          description: "Gym Equipment",
-          location: "ByProgrammers' Gym",
-          total: 15.0,
-          status: confirmStatus,
-        },
-      ],
-    },
-    {
-      id: 6,
-      name: "Clothing",
-      icon: icons.cloth_icon,
-      color: COLORS.red,
-      expenses: [
-        {
-          id: 17,
-          title: "T-Shirt",
-          description: "Plain Color T-Shirt",
-          location: "ByProgrammers' Mall",
-          total: 20.0,
-          status: pendingStatus,
-        },
-        {
-          id: 18,
-          title: "Jeans",
-          description: "Blue Jeans",
-          location: "ByProgrammers' Mall",
-          total: 50.0,
-          status: confirmStatus,
-        },
-      ],
-    },
-  ];
-  const [categories, setCategories] = React.useState(categoriesData);
   const [viewMode, setViewMode] = React.useState("chart");
   const [selectedCategory, setSelectedCategory] = React.useState(null);
   const [showMoreToggle, setShowMoreToggle] = React.useState(false);
@@ -297,7 +119,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
         <View>
           <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>CATEGORIES</Text>
           <Text style={{ color: COLORS.darkgray, ...FONTS.body4 }}>
-            {categories.length} Total
+            {posts?.result?.length} Total
           </Text>
         </View>
 
@@ -364,7 +186,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
       <View style={{ paddingHorizontal: SIZES.padding - 5 }}>
         <Animated.View style={{ height: categoryListHeightAnimationValue }}>
           <FlatList
-            data={categories}
+            data={posts.result}
             renderItem={renderItem}
             keyExtractor={(item) => `${item.id}`}
             numColumns={2}
@@ -422,7 +244,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
       >
         {/* Title */}
         <Text style={{ ...FONTS.h3, color: COLORS.primary }}>
-          INCOMING EXPENSES
+          EXPENSES
         </Text>
         <Text style={{ ...FONTS.body4, color: COLORS.darkgray }}>12 Total</Text>
       </View>
@@ -430,7 +252,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   }
   function renderIncomingExpenses() {
     let allExpenses = selectedCategory ? selectedCategory.expenses : [];
-    let incomingExpenses = allExpenses.filter((a) => a.status == "P");
+    let incomingExpenses = allExpenses.filter((a) => a.status == orderStatus);
 
     const renderItem = ({ item, index }) => (
       <View
@@ -451,6 +273,30 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
           elevation: 3,
         }}
       >
+         <View
+          style={{
+            position: 'absolute',
+            top: -2,
+            right: -4,
+            width: 100,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderTopRightRadius: 25,
+            borderBottomLeftRadius: 25,
+            backgroundColor: item.status == "INCOME" ? COLORS.primary : COLORS.red,
+            height: 30,
+          }}>
+          <Text
+            style={{
+              ...FONTS.body4,
+              color: COLORS.white,
+              marginStart: 1,
+              marginTop: 1,
+              textAlign: 'left',
+            }}>
+            {item.status}
+          </Text>
+        </View>
         {/* Title */}
         <View
           style={{
@@ -471,7 +317,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
             }}
           >
             <Image
-              source={selectedCategory.icon}
+              source={itemIconById(selectedCategory.id)}
               style={{
                 width: 30,
                 height: 30,
@@ -571,8 +417,8 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   }
   function processCategoryDataToDisplay() {
     // Filter expenses with "Confirmed" status
-    let chartData = categories.map((item) => {
-      let confirmExpenses = item.expenses.filter((a) => a.status == "C");
+    let chartData = posts.result.map((item) => {
+      let confirmExpenses = item.expenses.filter((a) => a.status == orderStatus);
       var total = confirmExpenses.reduce((a, b) => a + (b.total || 0), 0);
 
       return {
@@ -606,7 +452,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     return finalChartData;
   }
   function setSelectCategoryByName(name) {
-    let category = categories.filter((a) => a.name == name);
+    let category = posts.result.filter((a) => a.name == name);
     setSelectedCategory(category[0]);
   }
   function renderChart() {
@@ -669,7 +515,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
               {totalExpenseCount}
             </Text>
             <Text style={{ ...FONTS.body3, textAlign: "center" }}>
-              Expenses
+              {orderStatus}
             </Text>
           </View>
         </View>
@@ -812,6 +658,69 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
       </View>
     );
   }
+
+  function renderStatusSelection (){
+    return (
+      <View style={{
+   
+        backgroundColor: COLORS.lightGray2,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+ 
+        
+       
+       
+      }}>
+  <TouchableOpacity
+    onPress={() => setOrderStatus('EXPENSES')}
+    style={{
+      backgroundColor: COLORS.red,
+      marginStart: 10,
+      marginEnd: 10,
+      borderRadius: 5,
+      width: Dimensions.get('screen').width / 3,
+      height: Dimensions.get('screen').height /25,
+
+      padding: 10,
+      
+    }}>
+    <Text
+      style={{
+        ...FONTS.body5,
+        color: COLORS.white,
+     
+        alignSelf: 'center',
+      }}>
+      Expenses
+    </Text>
+  </TouchableOpacity>
+  <TouchableOpacity
+    onPress={() => setOrderStatus('INCOME')}
+    style={{
+      backgroundColor: COLORS.darkgreen,
+      marginStart: 10,
+      marginEnd: 10,
+      borderRadius: 5,
+      width: Dimensions.get('screen').width / 3,
+      height: Dimensions.get('screen').height /25,
+
+      padding: 10,
+      
+    }}>
+    <Text
+      style={{
+        ...FONTS.body5,
+        color: COLORS.white,
+     
+        alignSelf: 'center',
+      }}>
+      Income
+    </Text>
+  </TouchableOpacity>
+      </View>
+    )
+  }
+
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
       <Header
@@ -820,14 +729,10 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
         leftIcon={icons.back_arrow}
         rightIcon={icons.menu}
       />
-
-{renderSubHeader2()}
-      <CustomTitle
-        title="Expense Summary"
-        subTitle="Based on the data you provided"
-        isIconEnable={true}
-        
-      />
+   
+        {renderSubHeader2()}
+    
+      {renderStatusSelection()}
 
       {renderCategoryHeaderSection()}
 
@@ -845,6 +750,9 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
           </View>
         )}
       </ScrollView>
+  
+
+
     </View>
   );
 };
