@@ -18,7 +18,7 @@ import { VictoryPie } from "victory-native";
 import Header from "../components/Header";
 import CategoryItem from "../components/CategoryItem";
 import CustomTitle from "../components/CustomTitle";
-import { fetchPosts } from "../feature/expenses/expensesSlice";
+import { fetchPosts, successFetchPostData, failedFetchPostData, cleanPostData } from "../feature/expenses/expensesSlice";
 export interface HomeProps {
   step: number;
   setIsDisabled: (disabled: boolean) => void;
@@ -64,7 +64,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     if (status === "idle") {
       dispatch(fetchPosts());
     }
-  }, [posts, status, dispatch]);
+  }, [posts]);
 
   const [viewMode, setViewMode] = useState("chart");
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -83,12 +83,22 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
         }}
       >
         <View>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 , marginBottom:5}}>
             Hi, Abdulmalik Alshugaa
           </Text>
-          <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>
-            Summary (private)
+          <View style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+          <Text style={{ ...FONTS.h3, color: COLORS.black }}>
+           123,4 MYR
           </Text>
+          <Text style={{ ...FONTS.h4, color: COLORS.darkgray }}>
+            Cash flow 
+          </Text>
+          </View>
+         
         </View>
       </View>
     );

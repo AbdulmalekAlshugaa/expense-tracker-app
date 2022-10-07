@@ -1,5 +1,4 @@
 import { createSlice,createAsyncThunk } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
 import expensesApi from '../../api/expensesApi'
 
 
@@ -39,7 +38,7 @@ export const expensesSlice = createSlice({
       // doesn't actually mutate the state because it uses the Immer library,
       // which detects changes to a "draft state" and produces a brand new
       // immutable state based off those changes
-      console.log('actions',actions.payload)
+   
       state.status = "loading";
       state.postsList = actions.payload
       state.status = "success";
