@@ -17,6 +17,8 @@ import { COLORS, FONTS, icons, SIZES } from "../../assets/constants";
 import * as Svg from "react-native-svg";
 import { VictoryPie } from "victory-native";
 import Header from "../components/Header";
+import CategoryItem from "../components/CategoryItem";
+import CustomTitle from "../components/CustomTitle";
 export interface HomeProps {
   step: number;
   setIsDisabled: (disabled: boolean) => void;
@@ -237,25 +239,15 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     new Animated.Value(115)
   ).current;
 
-
-  function renderHeader() {
+  function renderSubHeader(isIconEnable: boolean) {
     return (
       <View
         style={{
-          paddingHorizontal: SIZES.padding,
-          paddingVertical: SIZES.padding,
+          paddingHorizontal: isIconEnable ? SIZES.padding : 0,
           backgroundColor: COLORS.white,
         }}
       >
-        <View>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>
-            My Expenses
-          </Text>
-          <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>
-            Summary (private)
-          </Text>
-        </View>
-
+        
         <View
           style={{
             flexDirection: "row",
@@ -263,25 +255,27 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
             alignItems: "center",
           }}
         >
-          <View
-            style={{
-              backgroundColor: COLORS.lightGray,
-              height: 50,
-              width: 50,
-              borderRadius: 25,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Image
-              source={icons.calendar}
+          {isIconEnable ? (
+            <View
               style={{
-                width: 20,
-                height: 20,
-                tintColor: COLORS.lightBlue,
+                backgroundColor: COLORS.lightGray,
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                justifyContent: "center",
+                alignItems: "center",
               }}
-            />
-          </View>
+            >
+              <Image
+                source={icons.calendar}
+                style={{
+                  width: 20,
+                  height: 20,
+                  tintColor: COLORS.lightBlue,
+                }}
+              />
+            </View>
+          ) : null}
 
           <View style={{ marginLeft: SIZES.padding }}>
             <Text style={{ color: COLORS.primary, ...FONTS.h3 }}>
@@ -292,6 +286,27 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
             </Text>
           </View>
         </View>
+      </View>
+    );
+  }
+  function renderSubHeader2() {
+    return (
+      <View
+        style={{
+          paddingHorizontal: SIZES.padding,
+          paddingVertical: SIZES.padding,
+          backgroundColor: COLORS.white,
+        }}
+      >
+        <View>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2 }}>
+            Hi, Abdulmalik Alshugaa
+          </Text>
+          <Text style={{ ...FONTS.h3, color: COLORS.darkgray }}>
+            Summary (private)
+          </Text>
+        </View>
+       
       </View>
     );
   }
@@ -364,42 +379,13 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
       </View>
     );
   }
+
   function renderCategoryList() {
     const renderItem = ({ item }) => (
-      <TouchableOpacity
-        onPress={() => setSelectedCategory(item)}
-        style={{
-          flex: 1,
-          flexDirection: "row",
-          margin: 5,
-          paddingVertical: SIZES.radius,
-          paddingHorizontal: SIZES.padding,
-          borderRadius: 5,
-          backgroundColor: COLORS.white,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 2,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 3,
-        }}
-      >
-        <Image
-          source={item.icon}
-          style={{
-            width: 20,
-            height: 20,
-            tintColor: item.color,
-          }}
-        />
-        <Text
-          style={{ marginLeft: SIZES.base, color: COLORS.primary, ...FONTS.h4 }}
-        >
-          {item.name}
-        </Text>
-      </TouchableOpacity>
+      <CategoryItem
+        item={item}
+        onPressAction={() => setSelectedCategory(item)}
+      />
     );
 
     return (
@@ -863,7 +849,13 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
         rightIcon={icons.menu}
       />
 
-      {renderHeader()}
+{renderSubHeader2()}
+      <CustomTitle
+        title="Expense Summary"
+        subTitle="Based on the data you provided"
+        isIconEnable={true}
+        
+      />
 
       {renderCategoryHeaderSection()}
 

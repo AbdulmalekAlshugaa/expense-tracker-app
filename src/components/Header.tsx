@@ -49,12 +49,7 @@ const Header: React.FC<HeaderProps> = ({
   rightIcon,
   rightActionEnabled = true,
 }) => {
-  const HITSLOPE = {
-    top: 40,
-    left: 40,
-    bottom: 40,
-    right: 40,
-  };
+ 
 
   return (
     <View style={styles.container}>

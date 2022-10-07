@@ -9,25 +9,15 @@ import * as SplashScreen from 'expo-splash-screen';
 import HomeScreen from "./src/Screens/HomeScreen";
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
-    'Inter-Black': require('./assets/fonts/Roboto-Black.ttf'),
-    'Roboto-Regular': require('./assets/fonts/Roboto-Regular.ttf'),
-    'Roboto-Black': require('./assets/fonts/Roboto-Black.ttf'),
-    'Roboto-Bold': require('./assets/fonts/Roboto-Bold.ttf'),
-  });
-  // useEffect(() => {
-  //   async function prepare() {
-  //     await SplashScreen.preventAutoHideAsync();
-  //   }
-  //   prepare();
-  // }, []);
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (fontsLoaded) {
-  //     await SplashScreen.hideAsync();
-  //   }
-  // }, [fontsLoaded]);
-  
+  const [loaded] = useFonts({
+    "Roboto-Black" : require('./assets/fonts/Roboto-Black.ttf'),
+    "Roboto-Bold" : require('./assets/fonts/Roboto-Bold.ttf'),
+    "Roboto-Regular" : require('./assets/fonts/Roboto-Regular.ttf'),
+})
 
+if(!loaded){
+    return null;
+}
   
   return (
     <Provider store={store}>
