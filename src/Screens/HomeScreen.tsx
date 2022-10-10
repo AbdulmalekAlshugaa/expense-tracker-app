@@ -18,18 +18,12 @@ import { VictoryPie } from "victory-native";
 import Header from "../components/Header";
 import CategoryItem from "../components/CategoryItem";
 import CustomTitle from "../components/CustomTitle";
+import LottieView from 'lottie-react-native';
 import { fetchPosts, successFetchPostData, failedFetchPostData, cleanPostData } from "../feature/expenses/expensesSlice";
+import animationsFile from "../../assets/constants/animations";
 export interface HomeProps {
-  step: number;
-  setIsDisabled: (disabled: boolean) => void;
-  phoneNumber: string;
-  countryCode: string;
-  onBackPressed: () => void;
-  otpHash: string;
-  setOtpHash: (hash: string) => void;
-  otp: string;
-  setOtp: (otp: string) => void;
-  onNotNumber: () => void;
+  
+  
 }
 
 const HomeScreen: React.FC<HomeProps> = (props) => {
@@ -61,6 +55,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   };
 
   useEffect(() => {
+     
     if (status === "idle") {
       dispatch(fetchPosts());
     }
@@ -722,6 +717,18 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     );
   }
 
+  const renderFooter = () => {
+    return (
+      <View
+        style={{
+          width: '100%',
+          height: '40%',
+        }}>
+        <LottieView source={animationsFile.loading} autoPlay loop />
+      </View>
+    );
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
       <Header
@@ -754,7 +761,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
             )}
           </ScrollView>
         </>
-      ) : null}
+      ) : renderFooter()}
     </View>
   );
 };
