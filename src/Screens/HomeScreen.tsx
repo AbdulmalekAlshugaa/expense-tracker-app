@@ -27,10 +27,27 @@ export interface HomeProps {
 }
 
 const HomeScreen: React.FC<HomeProps> = (props) => {
- 
   const dispatch = useDispatch();
   const status = useSelector((state: any) => state.expenses.status);
   const posts = useSelector((state: any) => state.expenses.postsList);
+  // load the page if the page is infocus and the status is idle
+  // load data if the sxreen is in focus
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      // The screen is focused
+      console.log("focused");
+      console.log(status);
+      // Call any action
+      dispatch(fetchPosts());
+      
+    });
+    return unsubscribe;
+  }, [props.navigation, status, dispatch]);
+
+
+
+ 
+
 
   const [orderStatus, setOrderStatus] = React.useState("INCOME");
 
@@ -59,7 +76,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     if (status === "idle") {
       dispatch(fetchPosts());
     }
-  }, [posts]);
+  }, [dispatch,status]);
 
   const [viewMode, setViewMode] = useState("chart");
   const [selectedCategory, setSelectedCategory] = useState(null);
