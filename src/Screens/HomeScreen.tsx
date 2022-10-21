@@ -7,6 +7,7 @@ import {
   FlatList,
   ScrollView,
   Dimensions,
+  Platform,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { useSelector, useDispatch } from "react-redux";
@@ -18,37 +19,41 @@ import { VictoryPie } from "victory-native";
 import Header from "../components/Header";
 import CategoryItem from "../components/CategoryItem";
 import CustomTitle from "../components/CustomTitle";
-import LottieView from 'lottie-react-native';
-import { fetchPosts, successFetchPostData, failedFetchPostData, cleanPostData } from "../feature/expenses/expensesSlice";
+import LottieView from "lottie-react-native";
+import {
+  fetchPosts,
+  successFetchPostData,
+  failedFetchPostData,
+  cleanPostData,
+} from "../feature/expenses/expensesSlice";
 import animationsFile from "../../assets/constants/animations";
+import { AppDispatch } from "../store";
 export interface HomeProps {
-  
-  
+  navigation: any;
 }
 
 const HomeScreen: React.FC<HomeProps> = (props) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const status = useSelector((state: any) => state.expenses.status);
   const posts = useSelector((state: any) => state.expenses.postsList);
   // load the page if the page is infocus and the status is idle
   // load data if the sxreen is in focus
+
+  const [viewMode, setViewMode] = useState<"chart" | "list">("chart");
+  const [selectedCategory, setSelectedCategory] = useState<number>(0);
+
+  const [showMoreToggle, setShowMoreToggle] = useState<boolean>(false);
+  const categoryListHeightAnimationValue = useRef(
+    new Animated.Value(115)
+  ).current;
   useEffect(() => {
-    const unsubscribe = props.navigation.addListener('focus', () => {
+    const unsubscribe = props.navigation.addListener("focus", () => {
       // The screen is focused
-      console.log("focused");
-      console.log(status);
       // Call any action
       dispatch(fetchPosts());
-      
     });
     return unsubscribe;
   }, [props.navigation, status, dispatch]);
-
-
-
- 
-
-
   const [orderStatus, setOrderStatus] = React.useState("INCOME");
 
   const itemIconById = (id: number) => {
@@ -72,18 +77,10 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   };
 
   useEffect(() => {
-     
     if (status === "idle") {
       dispatch(fetchPosts());
     }
-  }, [dispatch,status]);
-
-  const [viewMode, setViewMode] = useState("chart");
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [showMoreToggle, setShowMoreToggle] = useState(false);
-  const categoryListHeightAnimationValue = useRef(
-    new Animated.Value(115)
-  ).current;
+  }, [dispatch, status]);
 
   function renderSubHeader2() {
     return (
@@ -95,22 +92,21 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
         }}
       >
         <View>
-          <Text style={{ color: COLORS.primary, ...FONTS.h2 , marginBottom:5}}>
+          <Text style={{ color: COLORS.primary, ...FONTS.h2, marginBottom: 5 }}>
             Hi, Abdulmalik Alshugaa
           </Text>
-          <View style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-          <Text style={{ ...FONTS.h3, color: COLORS.black }}>
-           123,4 MYR
-          </Text>
-          <Text style={{ ...FONTS.h4, color: COLORS.darkgray }}>
-            Cash flow 
-          </Text>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ ...FONTS.h3, color: COLORS.black }}>123,4 MYR</Text>
+            <Text style={{ ...FONTS.h4, color: COLORS.darkgray }}>
+              Cash flow
+            </Text>
           </View>
-         
         </View>
       </View>
     );
@@ -262,140 +258,145 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   function renderIncomingExpenses() {
     let allExpenses = selectedCategory ? selectedCategory.expenses : [];
     let incomingExpenses = allExpenses.filter((a) => a.status == orderStatus);
-
-    const renderItem = ({ item, index }) => (
-      <View
-        style={{
-          width: 300,
-          marginRight: SIZES.padding,
-          marginLeft: index == 0 ? SIZES.padding : 0,
-          marginVertical: SIZES.radius,
-          borderRadius: SIZES.radius,
-          backgroundColor: COLORS.white,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 2,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 3,
-        }}
-      >
+    function renderItem({ item, index }: { item: any; index: number }) {
+      return (
         <View
           style={{
-            position: "absolute",
-            top: -2,
-            right: -4,
-            width: 100,
-            alignItems: "center",
-            justifyContent: "center",
-            borderTopRightRadius: 25,
-            borderBottomLeftRadius: 25,
-            backgroundColor:
-              item.status == "INCOME" ? COLORS.primary : COLORS.red,
-            height: 30,
-          }}
-        >
-          <Text
-            style={{
-              ...FONTS.body4,
-              color: COLORS.white,
-              marginStart: 1,
-              marginTop: 1,
-              textAlign: "left",
-            }}
-          >
-            {item.status}
-          </Text>
-        </View>
-        {/* Title */}
-        <View
-          style={{
-            flexDirection: "row",
-            padding: SIZES.padding,
-            alignItems: "center",
+            width: 300,
+            marginRight: SIZES.padding,
+            marginLeft: index == 0 ? SIZES.padding : 0,
+            marginVertical: SIZES.radius,
+            borderRadius: SIZES.radius,
+            backgroundColor: COLORS.white,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 2,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 3,
           }}
         >
           <View
             style={{
-              height: 50,
-              width: 50,
-              borderRadius: 25,
-              backgroundColor: COLORS.lightGray,
+              position: "absolute",
+              top: -2,
+              right: -4,
+              width: 100,
               alignItems: "center",
               justifyContent: "center",
-              marginRight: SIZES.base,
+              borderTopRightRadius: 25,
+              borderBottomLeftRadius: 25,
+              backgroundColor:
+                item.status == "INCOME" ? COLORS.primary : COLORS.red,
+              height: 30,
             }}
           >
-            <Image
-              source={itemIconById(selectedCategory.id)}
-              style={{
-                width: 30,
-                height: 30,
-                tintColor: selectedCategory.color,
-              }}
-            />
-          </View>
-
-          <Text style={{ ...FONTS.h3, color: selectedCategory.color }}>
-            {selectedCategory.name}
-          </Text>
-        </View>
-
-        {/* Expense Description */}
-        <View style={{ paddingHorizontal: SIZES.padding }}>
-          {/* Title and description */}
-          <Text style={{ ...FONTS.h3 }}>{item.title}</Text>
-          <Text
-            style={{ ...FONTS.body3, flexWrap: "wrap", color: COLORS.darkgray }}
-          >
-            {item.description}
-          </Text>
-
-          {/* Location */}
-          <Text style={{ marginTop: SIZES.padding, ...FONTS.h4 }}>
-            Location
-          </Text>
-          <View style={{ flexDirection: "row" }}>
-            <Image
-              source={icons.pin}
-              style={{
-                width: 20,
-                height: 20,
-                tintColor: COLORS.darkgray,
-                marginRight: 5,
-              }}
-            />
             <Text
               style={{
-                marginBottom: SIZES.base,
-                color: COLORS.darkgray,
                 ...FONTS.body4,
+                color: COLORS.white,
+                marginStart: 1,
+                marginTop: 1,
+                textAlign: "left",
               }}
             >
-              {item.location}
+              {item.status}
+            </Text>
+          </View>
+          {/* Title */}
+          <View
+            style={{
+              flexDirection: "row",
+              padding: SIZES.padding,
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                height: 50,
+                width: 50,
+                borderRadius: 25,
+                backgroundColor: COLORS.lightGray,
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: SIZES.base,
+              }}
+            >
+              <Image
+                source={itemIconById(selectedCategory.id)}
+                style={{
+                  width: 30,
+                  height: 30,
+                  tintColor: selectedCategory.color,
+                }}
+              />
+            </View>
+
+            <Text style={{ ...FONTS.h3, color: selectedCategory.color }}>
+              {selectedCategory.name}
+            </Text>
+          </View>
+
+          {/* Expense Description */}
+          <View style={{ paddingHorizontal: SIZES.padding }}>
+            {/* Title and description */}
+            <Text style={{ ...FONTS.h3 }}>{item.title}</Text>
+            <Text
+              style={{
+                ...FONTS.body3,
+                flexWrap: "wrap",
+                color: COLORS.darkgray,
+              }}
+            >
+              {item.description}
+            </Text>
+
+            {/* Location */}
+            <Text style={{ marginTop: SIZES.padding, ...FONTS.h4 }}>
+              Location
+            </Text>
+            <View style={{ flexDirection: "row" }}>
+              <Image
+                source={icons.pin}
+                style={{
+                  width: 20,
+                  height: 20,
+                  tintColor: COLORS.darkgray,
+                  marginRight: 5,
+                }}
+              />
+              <Text
+                style={{
+                  marginBottom: SIZES.base,
+                  color: COLORS.darkgray,
+                  ...FONTS.body4,
+                }}
+              >
+                {item.location}
+              </Text>
+            </View>
+          </View>
+
+          {/* Price */}
+          <View
+            style={{
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+              borderBottomStartRadius: SIZES.radius,
+              borderBottomEndRadius: SIZES.radius,
+              backgroundColor: selectedCategory.color,
+            }}
+          >
+            <Text style={{ color: COLORS.white, ...FONTS.body3 }}>
+              CONFIRM {item.total.toFixed(2)} USD
             </Text>
           </View>
         </View>
-
-        {/* Price */}
-        <View
-          style={{
-            height: 50,
-            alignItems: "center",
-            justifyContent: "center",
-            borderBottomStartRadius: SIZES.radius,
-            borderBottomEndRadius: SIZES.radius,
-            backgroundColor: selectedCategory.color,
-          }}
-        >
-          <Text style={{ color: COLORS.white, ...FONTS.body3 }}>
-            CONFIRM {item.total.toFixed(2)} USD
-          </Text>
-        </View>
-      </View>
-    );
+      );
+    }
 
     return (
       <View>
@@ -408,7 +409,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
             keyExtractor={(item) => `${item.id}`}
             horizontal
             showsHorizontalScrollIndicator={false}
-          />
+          ></FlatList>
         )}
 
         {incomingExpenses.length == 0 && (
@@ -465,15 +466,15 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
 
     return finalChartData;
   }
-  function setSelectCategoryByName(name) {
-    let category = posts.result.filter((a) => a.name == name);
+  function setSelectCategoryByName(name: string) {
+    let category = posts.result.filter((a: any) => a.name == name);
     setSelectedCategory(category[0]);
   }
   function renderChart() {
     let chartData = processCategoryDataToDisplay();
-    let colorScales = chartData.map((item) => item.color);
+    let colorScales = chartData.map((item: any) => item.color);
     let totalExpenseCount = chartData.reduce(
-      (a, b) => a + (b.expenseCount || 0),
+      (a: Object, b: Object) => a + (b.expenseCount || 0),
       0
     );
 
@@ -600,67 +601,69 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   function renderExpenseSummary() {
     let data = processCategoryDataToDisplay();
 
-    const renderItem = ({ item }) => (
-      <TouchableOpacity
-        style={{
-          flexDirection: "row",
-          height: 40,
-          paddingHorizontal: SIZES.radius,
-          borderRadius: 10,
-          backgroundColor:
-            selectedCategory && selectedCategory.name == item.name
-              ? item.color
-              : COLORS.white,
-        }}
-        onPress={() => {
-          let categoryName = item.name;
-          setSelectCategoryByName(categoryName);
-        }}
-      >
-        {/* Name/Category */}
-        <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
-          <View
-            style={{
-              width: 20,
-              height: 20,
-              backgroundColor:
-                selectedCategory && selectedCategory.name == item.name
-                  ? COLORS.white
-                  : item.color,
-              borderRadius: 5,
-            }}
-          />
+    function renderItem({ item, index }: { item: any; index: number }) {
+      return (
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            height: 40,
+            paddingHorizontal: SIZES.radius,
+            borderRadius: 10,
+            backgroundColor:
+              selectedCategory && selectedCategory.name == item.name
+                ? item.color
+                : COLORS.white,
+          }}
+          onPress={() => {
+            let categoryName = item.name;
+            setSelectCategoryByName(categoryName);
+          }}
+        >
+          {/* Name/Category */}
+          <View style={{ flex: 1, flexDirection: "row", alignItems: "center" }}>
+            <View
+              style={{
+                width: 20,
+                height: 20,
+                backgroundColor:
+                  selectedCategory && selectedCategory.name == item.name
+                    ? COLORS.white
+                    : item.color,
+                borderRadius: 5,
+              }}
+            />
 
-          <Text
-            style={{
-              marginLeft: SIZES.base,
-              color:
-                selectedCategory && selectedCategory.name == item.name
-                  ? COLORS.white
-                  : COLORS.primary,
-              ...FONTS.h3,
-            }}
-          >
-            {item.name}
-          </Text>
-        </View>
+            <Text
+              style={{
+                marginLeft: SIZES.base,
+                color:
+                  selectedCategory && selectedCategory.name == item.name
+                    ? COLORS.white
+                    : COLORS.primary,
+                ...FONTS.h3,
+              }}
+            >
+              {item.name}
+            </Text>
+          </View>
 
-        {/* Expenses */}
-        <View style={{ justifyContent: "center" }}>
-          <Text
-            style={{
-              color:
-                selectedCategory && selectedCategory.name == item.name
-                  ? COLORS.white
-                  : COLORS.primary,
-              ...FONTS.h3,
-            }}
-          >
-            {item.y} USD - {item.label}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    );
+          {/* Expenses */}
+          <View style={{ justifyContent: "center" }}>
+            <Text
+              style={{
+                color:
+                  selectedCategory && selectedCategory.name == item.name
+                    ? COLORS.white
+                    : COLORS.primary,
+                ...FONTS.h3,
+              }}
+            >
+              {item.y} USD - {item.label}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      );
+    }
 
     return (
       <View style={{ padding: SIZES.padding }}>
@@ -738,9 +741,10 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
     return (
       <View
         style={{
-          width: '100%',
-          height: '40%',
-        }}>
+          width: "100%",
+          height: "40%",
+        }}
+      >
         <LottieView source={animationsFile.loading} autoPlay loop />
       </View>
     );
@@ -778,7 +782,9 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
             )}
           </ScrollView>
         </>
-      ) : renderFooter()}
+      ) : (
+        renderFooter()
+      )}
     </View>
   );
 };

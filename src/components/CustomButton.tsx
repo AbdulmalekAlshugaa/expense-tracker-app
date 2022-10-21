@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import React from "react";
 import { COLORS, FONTS, icons, SIZES } from "../../assets/constants";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { TextInput, Text, Button } from "react-native-paper";
 
 interface Style {
