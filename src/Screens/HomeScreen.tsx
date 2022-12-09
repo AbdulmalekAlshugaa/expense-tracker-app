@@ -22,9 +22,7 @@ import CustomTitle from "../components/CustomTitle";
 import LottieView from "lottie-react-native";
 import {
   fetchPosts,
-  successFetchPostData,
-  failedFetchPostData,
-  cleanPostData,
+
 } from "../feature/expenses/expensesSlice";
 import animationsFile from "../../assets/constants/animations";
 import { AppDispatch } from "../store";
@@ -37,16 +35,16 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   const status = useSelector((state: any) => state.expenses.status);
   const posts = useSelector((state: any) => state.expenses.postsList);
   // load the page if the page is infocus and the status is idle
-  // load data if the sxreen is in focus
-
+  // load data if the screen is in focus
+  
   const [viewMode, setViewMode] = useState<"chart" | "list">("chart");
-  const [selectedCategory, setSelectedCategory] = useState<number>(0);
-
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [showMoreToggle, setShowMoreToggle] = useState<boolean>(false);
   const categoryListHeightAnimationValue = useRef(
     new Animated.Value(115)
   ).current;
   useEffect(() => {
+  
     const unsubscribe = props.navigation.addListener("focus", () => {
       // The screen is focused
       // Call any action
@@ -182,12 +180,17 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   }
 
   function renderCategoryList() {
-    const renderItem = ({ item }) => (
-      <CategoryItem
+      
+    function renderItem({ item }: { item: any;  }) {
+      return (
+        <CategoryItem
         item={item}
         onPressAction={() => setSelectedCategory(item)}
       />
-    );
+      );
+    }
+
+   
 
     return (
       <View style={{ paddingHorizontal: SIZES.padding - 5 }}>
@@ -258,6 +261,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
   function renderIncomingExpenses() {
     let allExpenses = selectedCategory ? selectedCategory.expenses : [];
     let incomingExpenses = allExpenses.filter((a) => a.status == orderStatus);
+
     function renderItem({ item, index }: { item: any; index: number }) {
       return (
         <View
@@ -406,7 +410,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
           <FlatList
             data={incomingExpenses}
             renderItem={renderItem}
-            keyExtractor={(item) => `${item.id}`}
+            keyExtractor={(item) => `${item._id}`}
             horizontal
             showsHorizontalScrollIndicator={false}
           ></FlatList>
@@ -450,7 +454,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
 
     // Calculate the total expenses
     let totalExpense = filterChartData.reduce((a, b) => a + (b.y || 0), 0);
-
+    //console.log("Total Expenses:", totalExpense);
     // Calculate percentage and repopulate chart data
     let finalChartData = filterChartData.map((item) => {
       let percentage = ((item.y / totalExpense) * 100).toFixed(0);
@@ -478,8 +482,7 @@ const HomeScreen: React.FC<HomeProps> = (props) => {
       0
     );
 
-    console.log("Check Chart");
-    console.log(chartData);
+
 
     if (Platform.OS == "ios") {
       return (

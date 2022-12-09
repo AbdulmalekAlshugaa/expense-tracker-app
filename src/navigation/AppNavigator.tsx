@@ -39,7 +39,7 @@ export function AppNavigator() {
               <View
                 style={{
                   alignItems: "center",
-                  backgroundColor: COLORS.moneyLightGreen,
+                  backgroundColor: COLORS.primary,
                   borderColor: COLORS.white,
                   borderRadius: 40,
                   borderWidth: 10,
@@ -50,7 +50,7 @@ export function AppNavigator() {
                 }}
               >
                 <MaterialCommunityIcons
-                  name="plus-circle"
+                  name="barcode-scan"
                   color={COLORS.white}
                   size={40}
                 />
@@ -59,7 +59,7 @@ export function AppNavigator() {
           ),
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons
-              name="plus-circle"
+              name="barcode-scan"
               color={color}
               size={size}
             />

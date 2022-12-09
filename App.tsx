@@ -3,16 +3,18 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useRef, useEffect, useCallback } from "react";
 import { store } from "./src/store";
 import { Provider } from "react-redux";
-import { useNavigation, CommonActions } from "@react-navigation/native";
+
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import HomeScreen from "./src/Screens/HomeScreen";
+
 import AppNavigator from "./src/navigation/AppNavigator";
 import { COLORS, FONTS } from "./assets/constants";
 import { Provider as PaperProvider } from "react-native-paper";
 import FlashMessage from 'react-native-flash-message';
+import ("./src/helper/ReactotronConfig")
+
 export type RootParamList = {
   HomeStack: undefined;
 };

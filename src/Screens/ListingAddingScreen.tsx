@@ -1,16 +1,8 @@
 import {
   View,
-  Animated,
-  TouchableOpacity,
-  Image,
-  StyleProp,
-  ViewStyle,
-  TextStyle,
-  ImageStyle,
-  FlatList,
-  ScrollView,
-  SafeAreaView,
+  
   StyleSheet,
+  Button
 } from "react-native";
 import * as Yup from "yup";
 import React, { useRef, useEffect, useCallback } from "react";
@@ -25,6 +17,7 @@ import { TextInput, Text } from "react-native-paper";
 import CustomButton from "../components/CustomButton";
 import AppTextInput from "../components/AppTextInput";
 import expensesApi from "../api/expensesApi";
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import { showMessage, hideMessage } from "react-native-flash-message";
 const validationSchema = Yup.object().shape({
   title: Yup.string().required().min(1).label("Title"),
@@ -41,10 +34,9 @@ interface Style {
 }
 const styles = StyleSheet.create<Style>({
   container: {
-    marginStart: SIZES.padding,
-    marginEnd: SIZES.padding,
-    marginTop: 5,
-    borderRadius: 10,
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   dropDownList: {
     backgroundColor: COLORS.lightGray,
@@ -95,195 +87,53 @@ const categories = [
 ];
 
 const ListingAddingScreen: React.FC<HomeProps> = (props) => {
-  const [expanded, setExpanded] = React.useState(false);
-  const [expandedCtr, setExpandedCtr] = React.useState(false);
-  const [category, setCategory] = React.useState(categories);
-  const [selectedCategory, setSelectedCategory] = React.useState("");
-  const [selectedStatus, setSelectedStatus] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
+  const [hasPermission, setHasPermission] = React.useState(null);
+  const [scanned, setScanned] = React.useState(false);
 
-  const handlePress = (element: any) => {
-    setSelectedStatus(element);
-    setExpanded(!expanded);
+  useEffect(() => {
+    const getBarCodeScannerPermissions = async () => {
+      const { status } = await BarCodeScanner.requestPermissionsAsync();
+      setHasPermission(status === 'granted');
+    };
+
+    getBarCodeScannerPermissions();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+
+    alert(`Bar code with type ${type} and data ${data} has been scanned!, send data to the server`);
   };
-  const handleCtrPress = (element: any) => {
-    setExpandedCtr(!expandedCtr);
-    setSelectedCategory(element);
-  };
 
-  const submit = async (values: any) => {
-    setLoading(true);
-    const apiRequest = await expensesApi.addPost({
-      title: values.title,
-      total: values.total,
-      description: values.description,
-      location: "Yemen Ibb",
-      status: selectedStatus,
-      id: selectedCategory.id,
-    });
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
 
-    if(apiRequest){
-     setLoading(false);
-      if (!apiRequest.ok) {
-        showMessage({
-          message: "Success",
-          description: "Your post has been added successfully",
-          type: "danger",
-          icon: {
-            name: "danger",
-            type: "font-awesome",
-            color: "#fff",
-          },
-          duration: 3000,
-        });
-      } else {
-        showMessage({
-          message: "Success",
-          description: "Your post has been added successfully",
-          type: "success",
-          icon: {
-            name: "success",
-            type: "font-awesome",
-            color: "#fff",
-          },
-          duration: 3000,
-        });
-      }
 
-    }
-    
-  };
+ 
+ 
+
+ 
 
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-      <Header
+      {/* <Header
         leftAction={() => console.log("Left Action")}
         rightAction={() => console.log("Right Action")}
         leftIcon={icons.back_arrow}
         rightIcon={icons.menu}
+      /> */}
+     <View style={styles.container}>
+  
+      <BarCodeScanner
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={StyleSheet.absoluteFillObject}
       />
-      <Formik
-        initialValues={{
-          title: "",
-          total: "",
-          description: "",
-          category: null,
-          status: "",
-        }}
-        validationSchema={validationSchema}
-        onSubmit={(values) => submit(values)}
-      >
-        {({ handleChange, handleBlur, handleSubmit, values }) => (
-          <View
-            style={{
-              flex: 1,
-            }}
-          >
-            <View style={styles.container}>
-              <TextInput
-                style={{
-                  fontSize: 12,
-                }}
-                placeholderTextColor={COLORS.gray}
-                mode="outlined"
-                onChangeText={handleChange("title")}
-                onBlur={handleBlur("title")}
-                value={values.title}
-                outlineColor={COLORS.gray}
-                activeOutlineColor={COLORS.moneyLightGreen}
-                allowFontScaling={true}
-                placeholder={"Title"}
-              />
-            </View>
-
-            <View style={styles.container}>
-              <TextInput
-                style={{
-                  fontSize: 12,
-                }}
-                placeholderTextColor={COLORS.gray}
-                mode="outlined"
-                onChangeText={handleChange("total")}
-                onBlur={handleBlur("total")}
-                value={values.total}
-                keyboardType="numeric"
-                outlineColor={COLORS.gray}
-                activeOutlineColor={COLORS.moneyLightGreen}
-                allowFontScaling={true}
-                placeholder={"price"}
-              />
-            </View>
-
-            <View style={styles.container}>
-              <TextInput
-                style={{
-                  fontSize: 12,
-                  borderRadius: 10,
-                }}
-                placeholderTextColor={COLORS.gray}
-                mode="outlined"
-                onChangeText={handleChange("description")}
-                onBlur={handleBlur("description")}
-                value={values.description}
-                outlineColor={COLORS.gray}
-                activeOutlineColor={COLORS.moneyLightGreen}
-                allowFontScaling={true}
-                placeholder={"Description"}
-              />
-            </View>
-
-            <ScrollView>
-              <List.Accordion
-                style={styles.dropDownList}
-                title="Status"
-                expanded={expanded}
-                onPress={handlePress}
-              >
-                <List.Item
-                  onPress={() => handlePress("INCOME")}
-                  style={styles.dropDownList}
-                  title="Income"
-                />
-                <List.Item
-                  onPress={() => handlePress("EXPENSES")}
-                  style={styles.dropDownList}
-                  title="Expenses"
-                />
-              </List.Accordion>
-
-              <List.Accordion
-                style={styles.dropDownList}
-                title="Category"
-                expanded={expandedCtr}
-                onPress={handleCtrPress}
-              >
-                {category.map((element) => {
-                  return (
-                    <List.Item
-                      onPress={() => handleCtrPress(element)}
-                      style={styles.dropDownList}
-                      title={element.name}
-                    />
-                  );
-                })}
-                <List.Item style={styles.dropDownList} title="Expenses" />
-              </List.Accordion>
-            </ScrollView>
-
-            <CustomButton
-              label="Submit"
-              onPressAction={handleSubmit}
-              loading={loading}
-              disabled={loading}
-             
-              labelStyle={{
-                color: COLORS.white,
-                ...FONTS.body4,
-              }}
-            />
-          </View>
-        )}
-      </Formik>
+      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
+    </View>
     </View>
   );
 };
