@@ -13,6 +13,8 @@ import AppNavigator from "./src/navigation/AppNavigator";
 import { COLORS, FONTS } from "./assets/constants";
 import { Provider as PaperProvider } from "react-native-paper";
 import FlashMessage from 'react-native-flash-message';
+import AuthNavigator from "./src/navigation/AuthNavigator";
+import MainNavigator from "./src/navigation/MainNavigator";
 import ("./src/helper/ReactotronConfig")
 
 export type RootParamList = {
@@ -35,24 +37,7 @@ export default function App() {
     <Provider store={store}>
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName={"HomeStack"}
-            screenOptions={{
-              headerShown: false,
-              headerStyle: {
-                backgroundColor: COLORS.black,
-              },
-              gestureEnabled: true,
-            }}
-          >
-            <Stack.Screen
-              name="appTabs"
-              component={AppNavigator}
-              options={{
-                headerShown: false,
-              }}
-            />
-          </Stack.Navigator>
+        <AuthNavigator/>
         </NavigationContainer>
         <FlashMessage
                 position="top"

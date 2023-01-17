@@ -14,7 +14,7 @@ const Tab = createBottomTabNavigator<MainAppParamList>();
 export function AppNavigator() {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Listing"
       screenOptions={{
         headerShown: false,
       }}
@@ -29,12 +29,12 @@ export function AppNavigator() {
         }}
       />
       <Tab.Screen
-        name="ListingEditing"
+        name="Listing"
         component={ListingAddingScreen}
         options={({ navigation }) => ({
           tabBarButton: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("ListingEditing")}
+              onPress={() => navigation.navigate("Listing")}
             >
               <View
                 style={{
@@ -67,7 +67,7 @@ export function AppNavigator() {
         })}
       />
       <Tab.Screen
-        name="Account"
+        name="profile"
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ color, size }) => (

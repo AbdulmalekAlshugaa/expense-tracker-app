@@ -1,9 +1,4 @@
-import {
-  View,
-  
-  StyleSheet,
-  Button
-} from "react-native";
+import { View, StyleSheet, Button } from "react-native";
 import * as Yup from "yup";
 import React, { useRef, useEffect, useCallback } from "react";
 import { COLORS, FONTS, icons, SIZES } from "../../assets/constants";
@@ -17,14 +12,10 @@ import { TextInput, Text } from "react-native-paper";
 import CustomButton from "../components/CustomButton";
 import AppTextInput from "../components/AppTextInput";
 import expensesApi from "../api/expensesApi";
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import { BarCodeScanner } from "expo-barcode-scanner";
 import { showMessage, hideMessage } from "react-native-flash-message";
-const validationSchema = Yup.object().shape({
-  title: Yup.string().required().min(1).label("Title"),
-  total: Yup.number().required().min(1).max(10000).label("Price"),
-  description: Yup.string().label("Description"),
-
-});
+import LoginApi from "../api/LoginApi";
+import { ActivityIndicator } from "react-native-paper";
 export interface HomeProps {
   navigation: any;
 }
@@ -35,8 +26,8 @@ interface Style {
 const styles = StyleSheet.create<Style>({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
+    flexDirection: "column",
+    justifyContent: "center",
   },
   dropDownList: {
     backgroundColor: COLORS.lightGray,
@@ -47,6 +38,14 @@ const styles = StyleSheet.create<Style>({
     marginEnd: 15,
   },
 });
+
+const renderActivityIndicator = () => {
+  return (
+    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <ActivityIndicator animating={true} color={COLORS.primary} />
+    </View>
+  );
+};
 
 const categories = [
   {
@@ -89,20 +88,39 @@ const categories = [
 const ListingAddingScreen: React.FC<HomeProps> = (props) => {
   const [hasPermission, setHasPermission] = React.useState(null);
   const [scanned, setScanned] = React.useState(false);
+ 
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
       const { status } = await BarCodeScanner.requestPermissionsAsync();
-      setHasPermission(status === 'granted');
+      setHasPermission(status === "granted");
     };
 
     getBarCodeScannerPermissions();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  const handleBarCodeScanned = async ({ type, data }) => {
     setScanned(true);
 
-    alert(`Bar code with type ${type} and data ${data} has been scanned!, send data to the server`);
+    const convertData = JSON.parse(data);
+    
+
+    const result = await LoginApi.scanQrCode(convertData.userId);
+    if (!result.ok) {
+      console.log(result.data);
+      showMessage({
+        message: "Error",
+        description: "Code scanned unsuccessfully",
+        type: "danger",
+      });
+    } else {
+ 
+      showMessage({
+        message: "Success",
+        description: "Code scanned successfully",
+        type: "success",
+      });
+    }
   };
 
   if (hasPermission === null) {
@@ -112,12 +130,6 @@ const ListingAddingScreen: React.FC<HomeProps> = (props) => {
     return <Text>No access to camera</Text>;
   }
 
-
- 
- 
-
- 
-
   return (
     <View style={{ flex: 1, backgroundColor: COLORS.white }}>
       {/* <Header
@@ -126,14 +138,20 @@ const ListingAddingScreen: React.FC<HomeProps> = (props) => {
         leftIcon={icons.back_arrow}
         rightIcon={icons.menu}
       /> */}
-     <View style={styles.container}>
-  
-      <BarCodeScanner
-        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-        style={StyleSheet.absoluteFillObject}
-      />
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
-    </View>
+      <View style={styles.container}>
+        <BarCodeScanner
+          onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+          style={StyleSheet.absoluteFillObject}
+        />
+        {scanned && (
+         
+          <CustomButton
+            label="Tap to Scan Again"
+            onPressAction={() => setScanned(false)}
+            loading={false}
+          />
+        )}
+      </View>
     </View>
   );
 };
